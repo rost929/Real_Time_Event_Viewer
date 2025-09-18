@@ -1,9 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup, LayersControl } from 'react-leaflet';
 import { Icon } from 'leaflet';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import mapConfig from '../mapConfig';
 import earthquakeIcon from '../assets/earthquake-icon.svg';
 import { useSelector } from 'react-redux';
+
+import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
 const customIcon = new Icon({
     iconUrl: earthquakeIcon,
@@ -23,12 +28,7 @@ const baseLayers = {
         url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
         attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
     },
-    carto: {
-        name: 'CartoDB Positron',
-        url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-    },
-    darkCarto: {
+    dark: {
         name: 'CartoDB Dark Matter',
         url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -38,7 +38,6 @@ const baseLayers = {
 function MapContainer({ events, selectedEvent }) {
     const mapRef = useRef(null);
     const category = useSelector(state => state.events.category);
-    const [activeBaseLayer, setActiveBaseLayer] = useState('osm'); // Default to OpenStreetMap
 
     useEffect(() => {
         if (selectedEvent && mapRef.current) {
@@ -52,8 +51,6 @@ function MapContainer({ events, selectedEvent }) {
             
             if (position) {
                 mapRef.current.flyTo(position, 8, { duration: 1.5 });
-            } else {
-                console.error("Invalid coordinates for selected event:", selectedEvent);
             }
         }
     }, [selectedEvent, category]);
@@ -67,62 +64,52 @@ function MapContainer({ events, selectedEvent }) {
                 ref={mapRef}
             >
                 <LayersControl position="topright">
-                    <LayersControl.BaseLayer checked={activeBaseLayer === 'osm'} name={baseLayers.osm.name}>
-                        <TileLayer
-                            attribution={baseLayers.osm.attribution}
-                            url={baseLayers.osm.url}
-                        />
+                    <LayersControl.BaseLayer checked name={baseLayers.osm.name}>
+                        <TileLayer attribution={baseLayers.osm.attribution} url={baseLayers.osm.url} />
                     </LayersControl.BaseLayer>
-                    <LayersControl.BaseLayer checked={activeBaseLayer === 'satellite'} name={baseLayers.satellite.name}>
-                        <TileLayer
-                            attribution={baseLayers.satellite.attribution}
-                            url={baseLayers.satellite.url}
-                        />
+                    <LayersControl.BaseLayer name={baseLayers.satellite.name}>
+                        <TileLayer attribution={baseLayers.satellite.attribution} url={baseLayers.satellite.url} />
                     </LayersControl.BaseLayer>
-                    <LayersControl.BaseLayer checked={activeBaseLayer === 'carto'} name={baseLayers.carto.name}>
-                        <TileLayer
-                            attribution={baseLayers.carto.attribution}
-                            url={baseLayers.carto.url}
-                        />
-                    </LayersControl.BaseLayer>
-                    <LayersControl.BaseLayer checked={activeBaseLayer === 'darkCarto'} name={baseLayers.darkCarto.name}>
-                        <TileLayer
-                            attribution={baseLayers.darkCarto.attribution}
-                            url={baseLayers.darkCarto.url}
-                        />
+                    <LayersControl.BaseLayer name={baseLayers.dark.name}>
+                        <TileLayer attribution={baseLayers.dark.attribution} url={baseLayers.dark.url} />
                     </LayersControl.BaseLayer>
                 </LayersControl>
-                {events && events.map((event, index) => {
-                    let position;
-                    let popupContent;
-                    const key = event?.id || event?.name || index;
 
-                    if (category === 'earthquakes' && event?.geometry?.coordinates) {
-                        const { geometry, properties } = event;
-                        position = [geometry.coordinates[1], geometry.coordinates[0]];
-                        popupContent = (
-                            <Popup>
-                                <b>{properties.place}</b><br />
-                                Magnitude: {properties.mag}
-                            </Popup>
-                        );
-                    } else if (category === 'volcanoes' && event?.latitude && event?.longitude) {
-                        position = [event.latitude, event.longitude];
-                        popupContent = (
-                            <Popup>
-                                <b>{event.name}</b><br />
-                            </Popup>
-                        );
-                    }
-                    if (position) {
-                        return (
-                            <Marker key={key} position={position} icon={customIcon}>
-                                {popupContent}
-                            </Marker>
-                        );
-                    }
-                    return null;
-                })}
+                <MarkerClusterGroup>
+                    {events && events.map((event) => {
+                        let position;
+                        let popupContent;
+                        const key = event.id;
+
+                        if (category === 'earthquakes' && event?.geometry?.coordinates) {
+                            const { geometry, properties } = event;
+                            position = [geometry.coordinates[1], geometry.coordinates[0]];
+                            popupContent = (
+                                <Popup>
+                                    <b>{properties.place}</b><br />
+                                    Magnitude: {properties.mag}
+                                </Popup>
+                            );
+                        } else if (category === 'volcanoes' && event?.latitude && event?.longitude) {
+                            position = [event.latitude, event.longitude];
+                            popupContent = (
+                                <Popup>
+                                    <b>{event.name}</b><br />
+                                </Popup>
+                            );
+                        }
+
+                        if (position) {
+                            return (
+                                <Marker key={key} position={position} icon={customIcon}>
+                                    {popupContent}
+                                </Marker>
+                            );
+                        }
+                        
+                        return null;
+                    })}
+                </MarkerClusterGroup>
             </LeafletMap>
         </div>
     );
