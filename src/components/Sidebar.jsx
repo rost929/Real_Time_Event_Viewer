@@ -7,22 +7,17 @@ import useDebounce from '../hooks/useDebounce';
 function Sidebar({ events, status }) {
     const dispatch = useDispatch();
 
-    // Selectores para obtener el estado actual de los filtros desde Redux
     const category = useSelector((state) => state.events.category);
     const timePeriod = useSelector((state) => state.events.timePeriod);
     const minMagnitude = useSelector((state) => state.events.minMagnitude);
 
-    // Estado local para el input de búsqueda para una respuesta inmediata en la UI
     const [localSearchTerm, setLocalSearchTerm] = useState('');
-    // Aplica debounce al término de búsqueda local
     const debouncedSearchTerm = useDebounce(localSearchTerm, 500);
 
-    // useEffect para actualizar el estado global de Redux solo cuando el usuario deja de escribir
     useEffect(() => {
         dispatch(setSearchTerm(debouncedSearchTerm));
     }, [debouncedSearchTerm, dispatch]);
 
-    // Objeto de estilo compartido para todos los inputs y selects
     const filterInputStyle = {
         width: '100%',
         padding: '10px',
