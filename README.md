@@ -17,6 +17,8 @@ This application serves to:
 
 The primary use case focuses on **event exploration through filters**. Users can activate or deactivate data layers (earthquakes, volcanoes, etc.) to customize their viewing experience. This is achieved through an interactive sidebar that controls what information is overlaid on the main map.
 
+![alt text](image.png)
+
 ## Technology Stack
 
 The application is built using the following technologies:
