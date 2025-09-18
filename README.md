@@ -1,70 +1,79 @@
-# Getting Started with Create React App
+# Real_Time_Event_Viewer 🌎
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Description
 
-## Available Scripts
+**Real_Time_Event_Viewer** is a real-time data visualization tool designed to showcase the interconnectedness of natural and human events around the world. Its purpose is to create a visual narrative about the dynamics and constant change of our planet, allowing users to explore and better understand the events that surround us.
 
-In the project directory, you can run:
+## Purpose
 
-### `npm start`
+This application serves to:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Visualize Events in Real-Time:** Displays geolocated events such as earthquakes and volcanoes on an interactive map.
+- **Filter and Customize Visualization:** Allows users to activate or deactivate data layers to personalize their viewing experience.
+- **Explore the Interconnection of Events:** Facilitates understanding of how different events are related and how they impact our planet.
+- **Provide Detailed Information:** Offers detailed information about each event by selecting a marker on the map.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Use Case: Event Filtering
 
-### `npm test`
+The primary use case focuses on **event exploration through filters**. Users can activate or deactivate data layers (earthquakes, volcanoes, etc.) to customize their viewing experience. This is achieved through an interactive sidebar that controls what information is overlaid on the main map.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Technology Stack
 
-### `npm run build`
+The application is built using the following technologies:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Front-end:**
+  - **React:** For building the user interface, providing an interactive and component-based experience.
+- **State Management:**
+  - **Redux Toolkit:** For managing the global state of the application, such as active filters, map style, and selected event. Redux Toolkit simplifies the configuration and use of Redux, providing tools to create reducers, actions, and selectors more efficiently.
+- **Map Visualization:**
+  - **Leaflet.js:** For interactive map visualization. Leaflet is a lightweight and flexible JavaScript library for creating mobile-friendly web maps.
+- **Styling:**
+  - **CSS Modules:** For managing CSS styles in a modular and encapsulated way, avoiding conflicts between styles from different components.
+- **HTTP Requests:**
+  - **Axios:** Promise-based HTTP client for making requests to the server.
+- **Code Formatting:**
+  - **Prettier:** To maintain a consistent code style throughout the project.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## APIs Used
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The application uses the following APIs to obtain real-time data:
 
-### `npm run eject`
+- **USGS Earthquake API:** To obtain real-time earthquake data.
+  - Base URL: `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/`
+  - Endpoint: `${timePeriod}.geojson` (where `timePeriod` can be `all_hour`, `all_day`, `all_week`, `all_month`)
+  - Usage: Used to obtain earthquake data based on the time period selected by the user.
+- **USGS Volcanoes API:** To obtain data on volcanoes and volcanic activity.
+  - URL: `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson`
+  - Usage: Used to obtain data on volcanoes and volcanic activity, filtering out events that are not earthquakes.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Project Structure
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Setup and Installation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Follow these steps to set up and run the project in your local environment:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Prerequisites
 
-## Learn More
+- **Node.js:** Make sure you have Node.js installed on your system. You can download it from [https://nodejs.org/](https://nodejs.org/).
+- **npm:** Node Package Manager (npm) is automatically installed with Node.js.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Installation Steps
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1.  **Clone the Repository:**
 
-### Code Splitting
+```bash
+git clone https://github.com/rost929/Real_Time_Event_Viewer.git
+cd Real_Time_Event_Viewer
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2.  **Install Dependencies:**
 
-### Analyzing the Bundle Size
+```bash
+npm install
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+3. **Start Development Server**
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+npm start
+```
